@@ -13,6 +13,7 @@ using QuickFix.Fields;
 using System.Configuration;
 using System.Xml;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace Fabkom.FIX.RollingLogs.Cnsl
 {
@@ -88,7 +89,7 @@ namespace Fabkom.FIX.RollingLogs.Cnsl
     {
 
         public static string FileToReplay = @"C:\DEV\Fabkom.MDF\Fabkom.MDF.Replay\ReplayData\FIX.4.4-NORTHERNCAPFBMD-VBOND.messages.current.log";
-        public static string FIXConfigFile = @"C:\DEV\Fabkom.MDF.Replay\FIX\FIXConfig\Fabkom.MDF.Replay.cfg";
+        public static string FIXConfigFile = @"C:\DEV\FIX\Fabkom.FIX.RollingLogs\Fabkom.FIX.RollingLogs.Cnsl\FIX\FIXConfig\Fabkom.FIX.RollingLogs.cfg";
 
         private static FIXLogReplayer fixLogReplayer;
 
@@ -347,125 +348,90 @@ namespace Fabkom.FIX.RollingLogs
 
         static void Main(string[] args)
         {
-            // TestNLog();
+            //// TestNLog();
+            ////EnableNLogSelfDiagLogging();
+            ////InitNLog_Use_LoggingConfiguration();
+            ////InitNLog_Use_LogManager_Configuration();
 
-            //EnableNLogSelfDiagLogging();
+            //SessionSettings settings = new SessionSettings(FIXConfigFile);
+            //NLogInternalLoggerConfig internalLoggerConfig = new NLogInternalLoggerConfig(true)
+            //{
+            //    AutoReload = true,
+            //    ThrowExceptions = true,
+            //    ThrowConfigExceptions = true,
+            //    LogToConsole = true,
+            //    LogFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "nlog-internal.log"),
+            //    LogLevel = NLogXMLConfig.INTERNALLOGLEVEL_DEBUG,
+            //};
 
-            //InitNLog_Use_LoggingConfiguration();
-            //InitNLog_Use_LogManager_Configuration();
+            //string xmlNLogConfig;
+            //xmlNLogConfig = NLogXMLConfig.CreateNLogXMLConfigFromFIXSessionSettings(internalLoggerConfig, settings);
+            ////xmlNLogConfig = File.ReadAllText(@"C:\DEV\Fabkom.MDF.Replay\NLog\nlog.config");
+            //NLog.LogManager.Configuration = XmlLoggingConfiguration.CreateFromXmlString(xmlNLogConfig);
 
-            SessionSettings settings = new SessionSettings(FIXConfigFile);
-            NLogInternalLoggerConfig internalLoggerConfig = new NLogInternalLoggerConfig(true)
-            {
-                AutoReload = true,
-                ThrowExceptions = true,
-                ThrowConfigExceptions = true,
-                LogToConsole = true,
-                LogFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "nlog-internal.log"),
-                LogLevel = NLogXMLConfig.INTERNALLOGLEVEL_DEBUG,
-            };
+            //var loger_CCL = NLog.LogManager.GetLogger("ColoredConsoleLog");
+            //var logger1_Messages = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF-FABKOM_Messages");
+            //var logger1_Events = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF-FABKOM_Events");
+            //var logger2_Messages = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF2-FABKOM2_Messages");
+            //var logger2_Events = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF2-FABKOM2_Events");
 
-            string xmlNLogConfig;
-            xmlNLogConfig = NLogXMLConfig.CreateNLogXMLConfigFromFIXSessionSettings(internalLoggerConfig, settings);
-            //xmlNLogConfig = File.ReadAllText(@"C:\DEV\Fabkom.MDF.Replay\NLog\nlog.config");
-            NLog.LogManager.Configuration = XmlLoggingConfiguration.CreateFromXmlString(xmlNLogConfig);
-
-            //string readxmlNLogConfigText = 
-            //StringReader sr = new StringReader(xml);
-            //XmlReader xr = XmlReader.Create(sr);
-            //XmlLoggingConfiguration config = new XmlLoggingConfiguration(xr, null);
-            //LogManager.Configuration = config;
-
-            var loger_CCL = NLog.LogManager.GetLogger("ColoredConsoleLog");
-            var logger1_Messages = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF-FABKOM_Messages");
-            var logger1_Events = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF-FABKOM_Events");
-            var logger2_Messages = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF2-FABKOM2_Messages");
-            var logger2_Events = NLog.LogManager.GetLogger("Logger_FIX.4.4-MDF2-FABKOM2_Events");
-
-            //var nLogTest = new NLogTest();
-            //nLogTest.Init(@"C:\DEV\Fabkom.MDF.Replay\FIX\Logs", "1111");
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    logger1_Messages.Debug("Only <<<Messages>>> for 11111111111111 go here.");
-                    logger1_Events.Debug("Only <<<Events>>> for 11111111111111 go here.");
-                    logger2_Messages.Debug("Only <<<Messages>>> for 22222222222222 go here.");
-                    logger2_Events.Debug("Only <<<Events>>> for 22222222222222 go here.");
-                    
-                    loger_CCL.Trace("Trace");
-                    loger_CCL.Debug("Debug");
-                    loger_CCL.Info("Info");
-                    loger_CCL.Warn("Warn");
-                    loger_CCL.Error("Error");
-                    loger_CCL.Fatal("Fatal");
-                    Thread.Sleep(1000);
-                }
-            });
-
-
-
-            //var logger_Messages = NLog.LogManager.GetLogger("TargetMessages");
-            //var logger_Events = NLog.LogManager.GetLogger("TargetEvents");
-
-            //var nLogTest = new NLogTest();
-            //nLogTest.Init(@"C:\DEV\Fabkom.MDF.Replay\FIX\Logs", "1111");
+            ////var nLogTest = new NLogTest();
+            ////nLogTest.Init(@"C:\DEV\Fabkom.MDF.Replay\FIX\Logs", "1111");
             //Task.Run(() =>
             //{
             //    while (true)
             //    {
-            //        logger_Messages.Debug("Only <<<Messages>>> for 1111 go here.");
-            //        logger_Events.Debug("Only <<<Events>>> for 1111 go here.");
-            //        Thread.Sleep(100);
+            //        logger1_Messages.Debug("Only <<<Messages>>> for 11111111111111 go here.");
+            //        logger1_Events.Debug("Only <<<Events>>> for 11111111111111 go here.");
+            //        logger2_Messages.Debug("Only <<<Messages>>> for 22222222222222 go here.");
+            //        logger2_Events.Debug("Only <<<Events>>> for 22222222222222 go here.");
+
+            //        loger_CCL.Trace("Trace");
+            //        loger_CCL.Debug("Debug");
+            //        loger_CCL.Info("Info");
+            //        loger_CCL.Warn("Warn");
+            //        loger_CCL.Error("Error");
+            //        loger_CCL.Fatal("Fatal");
+            //        Thread.Sleep(1000);
             //    }
             //});
 
-            //            < nlog internalLogFile = "c:\nlog-internal.txt" internalLogLevel = "Trace" >
-            //   < targets >
-            //      < !--target configuration here -->
-            //   </ targets >
-            //   < rules >
-            //      < !--log routing rules -->
-            //   </ rules >
-            //</ nlog >
+            //FileStream fileStream = File.Open(FIXConfigFile, FileMode.Open, FileAccess.Read);
+            //Settings mysettings = new Settings(new StreamReader(fileStream));
+            //LinkedList<Dictionary> linkedList = mysettings.Get("DEFAULT");
 
 
+            SessionSettings settings = new SessionSettings(FIXConfigFile);
+            MyQuickFixApp myApp = new MyQuickFixApp();
+            IMessageStoreFactory storeFactory = new FileStoreFactory(settings);
+            //ILogFactory logFactory = new FileLogFactory(settings);
+            ILogFactory logFactory = new NLogLogFactory(settings, FIXConfigFile);
 
+            var _settings = settings.Get();
 
+            string dd = _settings.GetString(SessionSettings.DATA_DICTIONARY);
+            FIXUtils.LoadDictionary(dd);
+            ThreadedSocketAcceptor acceptor = new ThreadedSocketAcceptor(myApp, storeFactory, settings, logFactory);
+            acceptor.Start();
 
+            while (!myApp.isLoggedIn)
+            {
+                Console.WriteLine($"Checking for LoggedOn every 5000 ms. {DateTime.Now:HH:mm:ss}.");
+                Thread.Sleep(5000);
+            }
 
+            fixLogReplayer = new FIXLogReplayer(FileToReplay, dd, myApp.sessions_[0]);
+            Console.Clear();
 
-            //SessionSettings settings = new SessionSettings(FIXConfigFile);
-            //MyQuickFixApp myApp = new MyQuickFixApp();
-            //IMessageStoreFactory storeFactory = new FileStoreFactory(settings);
-            ////ILogFactory logFactory = new FileLogFactory(settings);
-            //ILogFactory logFactory = new NLogLogFactory(settings);
-
-            //var _settings = settings.Get();
-
-            //string dd = _settings.GetString(SessionSettings.DATA_DICTIONARY);
-            //FIXUtils.LoadDictionary(dd);
-            //ThreadedSocketAcceptor acceptor = new ThreadedSocketAcceptor(myApp, storeFactory, settings, logFactory);
-            //acceptor.Start();
-
-            //while (!myApp.isLoggedIn)
-            //{
-            //    Console.WriteLine($"Checking for LoggedOn every 5000 ms. {DateTime.Now:HH:mm:ss}.");
-            //    Thread.Sleep(5000);
-            //}
-
-            //fixLogReplayer = new FIXLogReplayer(FileToReplay, dd, myApp.sessions_[0]);
-            //Console.Clear();
-
-            //StartStatsTimer();
-            //Task.Factory.StartNew(() =>
-            //{
-            //    watch = Stopwatch.StartNew();
-            //    //fixLogReplayer.ReadFile_AllLines_Convert();
-            //    fixLogReplayer.ReadFile_AllLines_PLINQ_Convert();
-            //    watch.Stop();
-            //}).Wait();
-            //StopStatsTimer();
+            StartStatsTimer();
+            Task.Factory.StartNew(() =>
+            {
+                watch = Stopwatch.StartNew();
+                //fixLogReplayer.ReadFile_AllLines_Convert();
+                fixLogReplayer.ReadFile_AllLines_PLINQ_Convert();
+                watch.Stop();
+            }).Wait();
+            StopStatsTimer();
 
             Console.WriteLine("All Done. Hit Esc.");
             while (Console.ReadKey(true).Key != ConsoleKey.Escape)

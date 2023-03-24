@@ -1,144 +1,48 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
+using System.IO;
+using QuickFix;
 
 namespace Fabkom.FIX.RollingLogs
 {
-
-    public class NLogInternalLoggerConfig
+    public static class Extentions
     {
-        public readonly bool UseInternalLogger = false;
-        public bool AutoReload { get; set; }
-        public bool ThrowExceptions { get; set; }
-        public bool ThrowConfigExceptions { get; set; }
-        public bool LogToConsole { get; set; }
-        public string LogFile { get; set; }
-        public string LogLevel { get; set; }
-        public NLogInternalLoggerConfig(bool _useInternalLogger)
+        public static void SaveToFile(this StringBuilder sb, string path)
         {
-            UseInternalLogger = _useInternalLogger;
-            AutoReload = false;
-            ThrowExceptions = false;
-            ThrowConfigExceptions = false;
-        }
-    }
-
-    public static class NLogXMLConfig
-    {
-        public const string XMLTRUE = "true";
-        public const string XMLFALSE = "false";
-        public const string AUTORELOAD = "autoReload";
-        public const string THROWEXCEPTIONS = "throwExceptions";
-        public const string THROWCONFIGEXCEPTIONS = "throwConfigExceptions";
-        public const string INTERNALLOGLEVEL = "internalLogLevel";
-        public const string INTERNALLOGLEVEL_DEBUG = "Debug";
-        public const string INTERNALLOGLEVEL_TRACE = "Trace";
-        public const string INTERNALLOGFILE = "internalLogFile";
-        public const string INTERNALLOGTOCONSOLE = "internalLogToConsole";
-
-        public static string CreateNLogXMLConfigFromFIXSessionSettings(NLogConfig logConfig)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            sb.AppendLine("<nlog");
-            sb.AppendLine("  xmlns =\"http://www.nlog-project.org/schemas/NLog.xsd\"");
-            sb.AppendLine("  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-
-            var internalLoggerConfig = FormatInternalLoggerConfig(logConfig.internalLoggerConfig);
-            sb.AppendLine(internalLoggerConfig + ">");
-
-            sb.AppendLine("");
-            sb.AppendLine("  <targets>");
-            sb.AppendLine("    <!-- Useful for debugging -->");
-            sb.AppendLine("    <target");
-            sb.AppendLine("      xsi:type=\"ColoredConsole\"");
-            sb.AppendLine("      name=\"consoleLog\"");
-            sb.AppendLine("      layout =\"${date:format=HH\\:mm\\:ss}|${level}|${stacktrace}|${message}\" />");
-
-
-            var sessions = settings.GetSessions();
-            foreach (var sessionID in logConfig.sessionsNLog)
+            using (StreamWriter sw = new StreamWriter(path))
             {
-                var prefix = sessionID.SessionID;//NLogLog.Prefix(sessionID);
-                var fileLogPath = sessionID.FileLogPath; // Get(sessionID).GetString(SessionSettings.FILE_LOG_PATH);
-                var logFileNameMessages = System.IO.Path.Combine(fileLogPath, prefix + ".messages.current.log");
-                var logFileNameEvents = System.IO.Path.Combine(fileLogPath, prefix + ".event.current.log");
-
-                sb.AppendLine("    <target");
-                sb.AppendLine("      xsi:type=\"File\"");
-                sb.AppendLine($"      name=\"{prefix}_Messages\"");
-                sb.AppendLine($"      fileName=\"{logFileNameMessages}\"");
-                sb.AppendLine("      layout =\"${longdate} ${message}\"/>");
-
-                sb.AppendLine("    <target");
-                sb.AppendLine("      xsi:type=\"File\"");
-                sb.AppendLine($"      name=\"{prefix}_Events\"");
-                sb.AppendLine($"      fileName=\"{logFileNameEvents}\"");
-                sb.AppendLine("      layout =\"${longdate} ${message}\"/>");
+                sw.Write(sb.ToString());
             }
-
-            sb.AppendLine("  </targets>");
-            sb.AppendLine("");
-            sb.AppendLine("  <rules>");
-            sb.AppendLine("    <logger");
-            sb.AppendLine("      name=\"ColoredConsoleLog\"");
-            sb.AppendLine("      minlevel=\"Trace\"");
-            sb.AppendLine("      maxlevel=\"Fatal\"");
-            sb.AppendLine("      writeTo=\"consoleLog\" />");
-
-            foreach (var sessionID in sessions)
-            {
-                var prefix = NLogLog.Prefix(sessionID);
-
-                sb.AppendLine("    <logger");
-                sb.AppendLine($"      name=\"Logger_{prefix}_Messages\"");
-                sb.AppendLine("      minlevel=\"Trace\"");
-                sb.AppendLine("      maxlevel=\"Fatal\"");
-                sb.AppendLine($"      writeTo=\"{prefix}_Messages\" />");
-
-                sb.AppendLine("    <logger");
-                sb.AppendLine($"      name=\"Logger_{prefix}_Events\"");
-                sb.AppendLine("      minlevel=\"Trace\"");
-                sb.AppendLine("      maxlevel=\"Fatal\"");
-                sb.AppendLine($"      writeTo=\"{prefix}_Events\" />");
-            }
-            sb.AppendLine("  </rules>");
-
-            sb.AppendLine("</nlog>");
-            
-            sb.SaveToFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "nlog.config.generated"));
-
-            return sb.ToString();
         }
 
-        private static string FormatInternalLoggerConfig(NLogInternalLoggerConfig nLogInternalLoggerConfig)
+        public static string Normalize(this SessionID _sessionId)
         {
-            StringBuilder sb = new StringBuilder();
-            if (true == nLogInternalLoggerConfig?.UseInternalLogger)
-            {
-                if (true == nLogInternalLoggerConfig?.AutoReload)
-                    sb.AppendLine($"  {AUTORELOAD}=\"{XMLTRUE}\"");
+            var sessionId = _sessionId.ToString();
+            foreach (char c in Path.GetInvalidFileNameChars())
+                sessionId = sessionId.Replace(c, '-');
+            while (sessionId.Contains("--"))
+                sessionId = sessionId.Replace("--", "-");
+            sessionId = sessionId.TrimEnd(new char[] { ' ', '.' });
+            return sessionId;
+        }
 
-                if (true == nLogInternalLoggerConfig?.ThrowExceptions)
-                    sb.AppendLine($"  {THROWEXCEPTIONS}=\"{XMLTRUE}\"");
+        public static string Prefix(this SessionID sessionID)
+        {
+            System.Text.StringBuilder prefix = new System.Text.StringBuilder(sessionID.BeginString)
+                .Append('-').Append(sessionID.SenderCompID);
+            if (SessionID.IsSet(sessionID.SenderSubID))
+                prefix.Append('_').Append(sessionID.SenderSubID);
+            if (SessionID.IsSet(sessionID.SenderLocationID))
+                prefix.Append('_').Append(sessionID.SenderLocationID);
+            prefix.Append('-').Append(sessionID.TargetCompID);
+            if (SessionID.IsSet(sessionID.TargetSubID))
+                prefix.Append('_').Append(sessionID.TargetSubID);
+            if (SessionID.IsSet(sessionID.TargetLocationID))
+                prefix.Append('_').Append(sessionID.TargetLocationID);
 
-                if (true == nLogInternalLoggerConfig?.ThrowConfigExceptions)
-                    sb.AppendLine($"  {THROWCONFIGEXCEPTIONS}=\"{XMLTRUE}\"");
+            if (SessionID.IsSet(sessionID.SessionQualifier))
+                prefix.Append('-').Append(sessionID.SessionQualifier);
 
-                if (false == string.IsNullOrEmpty(nLogInternalLoggerConfig?.LogLevel))
-                    sb.AppendLine($"  {INTERNALLOGLEVEL}=\"{nLogInternalLoggerConfig?.LogLevel}\"");
-                else
-                    sb.AppendLine($"  {INTERNALLOGLEVEL}=\"{INTERNALLOGLEVEL_TRACE}\"");
-
-                if (true == nLogInternalLoggerConfig?.LogToConsole)
-                    sb.AppendLine($"  {INTERNALLOGTOCONSOLE}=\"{XMLTRUE}\"");
-
-                if (false == string.IsNullOrEmpty(nLogInternalLoggerConfig?.LogFile))
-                    sb.AppendLine($"  {INTERNALLOGFILE}=\"{nLogInternalLoggerConfig.LogFile}\"");
-                else
-                    sb.AppendLine($"  {INTERNALLOGFILE}=\"{"${basedir}/App_Data/nlog-internal.log"}\"");
-            }
-            return sb.ToString().Trim(new char[] { '\r', '\n' });
+            return prefix.ToString();
         }
     }
 }
