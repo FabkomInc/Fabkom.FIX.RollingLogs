@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fabkom.FIX.RollingLogs", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fabkom.FIX.RollingLogs.Cnsl", "..\Fabkom.FIX.RollingLogs.Cnsl\Fabkom.FIX.RollingLogs.Cnsl.csproj", "{A7C81155-B047-43F9-88BC-180B5FC21F65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fabkom.FIX.RollingLogs.nUnitTests", "..\Fabkom.FIX.RollingLogs.nUnitTests\Fabkom.FIX.RollingLogs.nUnitTests.csproj", "{E4BEEEC1-4ED4-4FC6-B526-99C38D29C6C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A7C81155-B047-43F9-88BC-180B5FC21F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7C81155-B047-43F9-88BC-180B5FC21F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7C81155-B047-43F9-88BC-180B5FC21F65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4BEEEC1-4ED4-4FC6-B526-99C38D29C6C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4BEEEC1-4ED4-4FC6-B526-99C38D29C6C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4BEEEC1-4ED4-4FC6-B526-99C38D29C6C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4BEEEC1-4ED4-4FC6-B526-99C38D29C6C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

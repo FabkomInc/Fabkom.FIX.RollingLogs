@@ -10,7 +10,6 @@ using System.Reflection;
 
 namespace Fabkom.FIX.RollingLogs
 {
-
     public class SessionNLogConfig
     {
         public readonly string FileLogPath;
@@ -30,7 +29,6 @@ namespace Fabkom.FIX.RollingLogs
             EventsNumFilesToKeep = eventsNumFilesToKeep;
         }
     }
-
 
     public class NLogConfig
     {
@@ -91,7 +89,7 @@ namespace Fabkom.FIX.RollingLogs
                         {
                             session.Merge(dict);
                             
-                            var fileLogPath = GetFIXDictionaryString(session, NLOG_MAXFILESIZE_MESSAGES);
+                            var fileLogPath = GetFIXDictionaryString(session, SessionSettings.FILE_LOG_PATH);
                             var nLogMeggagesMaxFileSize = GetFIXDictionaryInt(session, NLOG_MAXFILESIZE_MESSAGES, 30);
                             var nLogMessagesNumFilesToKeep = GetFIXDictionaryInt(session, NLOG_NUMFILESTOKEEP_MESSAGES, 10);
                             var nLogEventsMaxFileSize = GetFIXDictionaryInt(session, NLOG_MAXFILESIZE_EVENTS, 10);
@@ -144,103 +142,6 @@ namespace Fabkom.FIX.RollingLogs
                 SessionID sessionID = new SessionID(beginString, senderCompID, senderSubID, senderLocationID, targetCompID, targetSubID, targetLocationID, sessionQualifier);
                 return sessionID;
             }
-
-            //var dict = settings.Get();
-            //var nLogConfigFile = dict.Has(NLOG_CONFIG_FILE) ? dict.GetString(NLOG_CONFIG_FILE) : null;
-            //if (System.IO.File.Exists(nLogConfigFile))
-            //    return;
-
-            //            //    var MessagesMaxFileSize = dict.Has(LOG4NET_MAXFILESIZE_MSGS) ? dict.GetString(LOG4NET_MAXFILESIZE_MSGS) : "10MB";
-            //            //    var MessagesNumFilesToKeep = dict.Has(LOG4NET_NUMFILESTOKEEP_MSGS) ? dict.GetInt(LOG4NET_NUMFILESTOKEEP_MSGS) : 10;
-            //            //    var EventsMaxFileSize = dict.Has(LOG4NET_MAXFILESIZE_EVTS) ? dict.GetString(LOG4NET_MAXFILESIZE_EVTS) : "5MB";
-            //            //    var EventsNumFilesToKeep = dict.Has(LOG4NET_NUMFILESTOKEEP_EVTS) ? dict.GetInt(LOG4NET_NUMFILESTOKEEP_EVTS) : 10;
-            //            //    var CreateXmlConfigFile = dict.Has(LOG4NET_DEBUG_CREATEXMLCONFIGFILE) ? dict.GetBool(LOG4NET_DEBUG_CREATEXMLCONFIGFILE) : false;
-            //            //    var UseConsole = dict.Has(LOG4NET_DEBUG_USECONSOLE) ? dict.GetBool(LOG4NET_DEBUG_USECONSOLE) : false;
-            //            //    var ConversionPattern = dict.Has(LOG4NET_CONVERSIONPATTERN) ? dict.GetString(LOG4NET_CONVERSIONPATTERN) : "%date% %message%newline";
-            //            //    var sessions = settings.GetSessions();
-
-            //            //    foreach (var sessionID in sessions)
-            //            //    {
-            //            //        Appenders.Add(new AppenderConfig(sessionID.ToString())
-            //            //        {
-            //            //            LogDirectory = LogDirectory,
-            //            //            MessagesMaxFileSize = MessagesMaxFileSize,
-            //            //            MessagesNumFilesToKeep = MessagesNumFilesToKeep,
-            //            //            EventsMaxFileSize = EventsMaxFileSize,
-            //            //            EventsNumFilesToKeep = EventsNumFilesToKeep,
-            //            //            ConversionPattern = ConversionPattern
-            //            //        });
-            //            //    }
-
-            //            //    SetLog4NetXmlElement(Log4NetConfigBuilder.Build(Appenders, UseConsole, CreateXmlConfigFile).ToString());
-            //            //}
-
-            //            //private void SetLog4NetXmlElement(string strXml)
-            //            //{
-            //            //    var doc = new XmlDocument();
-            //            //    doc.LoadXml(strXml);
-            //            //    var root = doc.DocumentElement;
-            //            //    XML = (XmlElement)root.GetElementsByTagName("log4net")[0];
-            //            //}
         }
     }
 }
-
-
-
-
-//using QuickFix;
-//using System.Collections.Generic;
-//using System.Xml;
-
-//namespace AD.FIX.Log4Net
-//{
-//    public class LoggerConfig
-//    {
-
-
-//        public XmlElement XML;
-
-//        public LoggerConfig(SessionSettings settings)
-//        {
-//            List<AppenderConfig> Appenders = new List<AppenderConfig>();
-
-//            var dict = settings.Get();
-//            var LogDirectory = dict.Has(LOG4NET_FILELOGPATH) ? dict.GetString(LOG4NET_FILELOGPATH) : null;
-//            if (LogDirectory == null)
-//                return;
-
-//            var MessagesMaxFileSize = dict.Has(LOG4NET_MAXFILESIZE_MSGS) ? dict.GetString(LOG4NET_MAXFILESIZE_MSGS) : "10MB";
-//            var MessagesNumFilesToKeep = dict.Has(LOG4NET_NUMFILESTOKEEP_MSGS) ? dict.GetInt(LOG4NET_NUMFILESTOKEEP_MSGS) : 10;
-//            var EventsMaxFileSize = dict.Has(LOG4NET_MAXFILESIZE_EVTS) ? dict.GetString(LOG4NET_MAXFILESIZE_EVTS) : "5MB";
-//            var EventsNumFilesToKeep = dict.Has(LOG4NET_NUMFILESTOKEEP_EVTS) ? dict.GetInt(LOG4NET_NUMFILESTOKEEP_EVTS) : 10;
-//            var CreateXmlConfigFile = dict.Has(LOG4NET_DEBUG_CREATEXMLCONFIGFILE) ? dict.GetBool(LOG4NET_DEBUG_CREATEXMLCONFIGFILE) : false;
-//            var UseConsole = dict.Has(LOG4NET_DEBUG_USECONSOLE) ? dict.GetBool(LOG4NET_DEBUG_USECONSOLE) : false;
-//            var ConversionPattern = dict.Has(LOG4NET_CONVERSIONPATTERN) ? dict.GetString(LOG4NET_CONVERSIONPATTERN) : "%date% %message%newline";
-//            var sessions = settings.GetSessions();
-
-//            foreach (var sessionID in sessions)
-//            {
-//                Appenders.Add(new AppenderConfig(sessionID.ToString())
-//                {
-//                    LogDirectory = LogDirectory,
-//                    MessagesMaxFileSize = MessagesMaxFileSize,
-//                    MessagesNumFilesToKeep = MessagesNumFilesToKeep,
-//                    EventsMaxFileSize = EventsMaxFileSize,
-//                    EventsNumFilesToKeep = EventsNumFilesToKeep,
-//                    ConversionPattern = ConversionPattern
-//                });
-//            }
-
-//            SetLog4NetXmlElement(Log4NetConfigBuilder.Build(Appenders, UseConsole, CreateXmlConfigFile).ToString());
-//        }
-
-//        private void SetLog4NetXmlElement(string strXml)
-//        {
-//            var doc = new XmlDocument();
-//            doc.LoadXml(strXml);
-//            var root = doc.DocumentElement;
-//            XML = (XmlElement)root.GetElementsByTagName("log4net")[0];
-//        }
-//    }
-//}

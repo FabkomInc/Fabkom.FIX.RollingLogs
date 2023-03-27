@@ -55,6 +55,10 @@ internal class FIXLogReplayer
                         Monitor.Enter(sessionLock);
                         Session.SendToTarget(msg, sessionID);
                     }
+                    catch(Exception ex)
+                    { 
+                        Debug.WriteLine(ex.Message);
+                    }
                     finally
                     {
                         Monitor.Exit(sessionLock);
