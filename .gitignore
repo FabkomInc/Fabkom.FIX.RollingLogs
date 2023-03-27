@@ -364,5 +364,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #FIX Crap
-FIX/
-*.body
+[Ss]tore/
+{Ll]og/
+LogsBackup/
+LogsDebug/
+*.log
