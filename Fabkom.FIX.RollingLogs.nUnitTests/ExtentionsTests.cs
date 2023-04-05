@@ -15,15 +15,14 @@ namespace Fabkom.FIX.RollingLogs.nUnitTests
         {
         }
 
-
-        const string beginString = "FIX4.4";
-        const string senderCompID = "SENDER";
-        const string senderSubID = "SENDER_SUBID";
-        const string senderLocationID = "SENDER_LOCATIONID";
-        const string targetCompID = "TARGET";
-        const string targetSubID = "TARGET_SUBID";
-        const string targetLocationID = "TARGET_LOCATIONID";
-        const string sessionQualifier = "SESSIONQUALIFIER";
+        public const string BEGIN_STRING = "FIX.4.4";
+        public const string SENDER_COMPID = "SENDER";
+        public const string SENDER_SUBID = "SENDER_SUBID";
+        public const string SENDER_LOCATIONID = "SENDER_LOCATIONID";
+        public const string TARGET_COMPID = "TARGET";
+        public const string TARGET_SUBID = "TARGET_SUBID";
+        public const string TARGET_LOCATIONID = "TARGET_LOCATIONID";
+        public const string SESSIONQUALIFIER = "SESSIONQUALIFIER";
 
         class SessionIDTestValues
         {
@@ -36,7 +35,6 @@ namespace Fabkom.FIX.RollingLogs.nUnitTests
                 SessionID = sessionID;
                 ExpectedNormalizedSessionID = normalizedSessionID;
             }
-
         }
 
         [Test]
@@ -46,20 +44,20 @@ namespace Fabkom.FIX.RollingLogs.nUnitTests
             List<SessionIDTestValues> expected = new List<SessionIDTestValues>
             {
                 new SessionIDTestValues(
-                    new SessionID(beginString, senderCompID, senderSubID, senderLocationID, targetCompID, targetSubID, targetLocationID, sessionQualifier),
-                    "FIX4.4-SENDER-SENDER_SUBID-SENDER_LOCATIONID-TARGET-TARGET_SUBID-TARGET_LOCATIONID-SESSIONQUALIFIER"),
+                    new SessionID(BEGIN_STRING, SENDER_COMPID, SENDER_SUBID, SENDER_LOCATIONID, TARGET_COMPID, TARGET_SUBID, TARGET_LOCATIONID, SESSIONQUALIFIER),
+                    "FIX.4.4-SENDER-SENDER_SUBID-SENDER_LOCATIONID-TARGET-TARGET_SUBID-TARGET_LOCATIONID-SESSIONQUALIFIER"),
                 new SessionIDTestValues(
-                    new SessionID(beginString, senderCompID, targetCompID),
-                    "FIX4.4-SENDER-TARGET"),
+                    new SessionID(BEGIN_STRING, SENDER_COMPID, TARGET_COMPID),
+                    "FIX.4.4-SENDER-TARGET"),
                 new SessionIDTestValues(
-                    new SessionID(beginString, senderCompID, senderSubID, targetCompID, targetSubID),
-                    "FIX4.4-SENDER-SENDER_SUBID-TARGET-TARGET_SUBID"),
+                    new SessionID(BEGIN_STRING, SENDER_COMPID, SENDER_SUBID, TARGET_COMPID, TARGET_SUBID),
+                    "FIX.4.4-SENDER-SENDER_SUBID-TARGET-TARGET_SUBID"),
                 new SessionIDTestValues(
-                    new SessionID(beginString, senderCompID, senderSubID, senderLocationID, targetCompID, targetSubID, targetLocationID)
-                    ,"FIX4.4-SENDER-SENDER_SUBID-SENDER_LOCATIONID-TARGET-TARGET_SUBID-TARGET_LOCATIONID"),
+                    new SessionID(BEGIN_STRING, SENDER_COMPID, SENDER_SUBID, SENDER_LOCATIONID, TARGET_COMPID, TARGET_SUBID, TARGET_LOCATIONID)
+                    ,"FIX.4.4-SENDER-SENDER_SUBID-SENDER_LOCATIONID-TARGET-TARGET_SUBID-TARGET_LOCATIONID"),
                 new SessionIDTestValues(
-                    new SessionID(beginString, senderCompID, targetCompID, sessionQualifier),
-                    "FIX4.4-SENDER-TARGET-SESSIONQUALIFIER")
+                    new SessionID(BEGIN_STRING, SENDER_COMPID, TARGET_COMPID, SESSIONQUALIFIER),
+                    "FIX.4.4-SENDER-TARGET-SESSIONQUALIFIER")
             };
 
             // Act

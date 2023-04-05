@@ -21,6 +21,8 @@ namespace Fabkom.FIX.RollingLogs
                 sessionId = sessionId.Replace(c, '-');
             while (sessionId.Contains("--"))
                 sessionId = sessionId.Replace("--", "-");
+            while (sessionId.Contains(" "))
+                sessionId = sessionId.Replace(" ", "");
             sessionId = sessionId.TrimEnd(new char[] { ' ', '.' });
             return sessionId;
         }

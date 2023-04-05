@@ -8,7 +8,6 @@ namespace Fabkom.FIX.RollingLogs
         private NLog.Logger logger_Events;
         private NLog.Logger logger_Console;
         private bool LogToConsole { get; set; } = false;
-
         public NLogLog(string fileLogPath)
         {
             LogToConsole = false;
@@ -20,7 +19,6 @@ namespace Fabkom.FIX.RollingLogs
             LogToConsole = nLogConfig?.internalLoggerConfig?.LogToConsole ?? false;
             Init(fileLogPath, sessionID.Normalize());
         }
-
         private void Init(string fileLogPath, string prefix)
         {
             if (!System.IO.Directory.Exists(fileLogPath))
@@ -32,7 +30,6 @@ namespace Fabkom.FIX.RollingLogs
             if(LogToConsole)
                 logger_Console = NLog.LogManager.GetLogger("ColoredConsoleLog");
         }
-
         public void Clear()
         {
         }

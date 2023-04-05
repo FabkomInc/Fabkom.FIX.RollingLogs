@@ -10,29 +10,10 @@ using System.Reflection;
 
 namespace Fabkom.FIX.RollingLogs
 {
-    public class SessionNLogConfig
-    {
-        public readonly string FileLogPath;
-        public readonly int MessagesMaxFileSize;
-        public readonly int MessagesNumFilesToKeep;
-        public readonly int EventsMaxFileSize;
-        public readonly int EventsNumFilesToKeep;
-        public readonly string SessionID;
-
-        public SessionNLogConfig(string sessionID, string fileLogPath, int messagesMaxFileSize, int messagesNumFilesToKeep, int eventsMaxFileSize, int eventsNumFilesToKeep)
-        {
-            SessionID = sessionID;
-            FileLogPath = fileLogPath;
-            MessagesMaxFileSize = messagesMaxFileSize;
-            MessagesNumFilesToKeep = messagesNumFilesToKeep;
-            EventsMaxFileSize = eventsMaxFileSize;
-            EventsNumFilesToKeep = eventsNumFilesToKeep;
-        }
-    }
-
     public class NLogConfig
     {
-        public static string NLOG_CONFIG_FILE = "NLog.ConfigFile";
+        #region Constants
+        public static string NLOG_CONFIGFILE = "NLog.ConfigFile";
         public static string NLOG_DEBUG_USEINTERNALLOGGER = "NLog.Debug.UseInternalLogger";
         public static string NLOG_DEBUG_USECONSOLE = "NLog.Debug.UseConsole";
 
@@ -40,6 +21,14 @@ namespace Fabkom.FIX.RollingLogs
         public static string NLOG_NUMFILESTOKEEP_MESSAGES = "NLog.NumFilesToKeep_Messages";
         public static string NLOG_MAXFILESIZE_EVENTS = "NLog.MaxFileSize_Events";
         public static string NLOG_NUMFILESTOKEEP_EVENTS = "NLog.NumFilesToKeep_Events";
+        public static string NLOG_INTERNAL_LOG = "nlog-internal.log";
+
+
+        public static int NLOG_MAXFILESIZE_MESSAGES_DEFAULT = 30;
+        public static int NLOG_NUMFILESTOKEEP_MESSAGES_DEFAULT = 10;
+        public static int NLOG_MAXFILESIZE_EVENTS_DEFAULT = 5;
+        public static int NLOG_NUMFILESTOKEEP_EVENTS_DEFAULT = 10;
+        #endregion
 
         public string NLogConfigFile { get; private set; }
 
@@ -64,7 +53,7 @@ namespace Fabkom.FIX.RollingLogs
                         LinkedList<Dictionary> dicts = settings.Get("DEFAULT");
                         var dict = dicts.First.Value;
 
-                        NLogConfigFile = GetFIXDictionaryString(dict, NLOG_CONFIG_FILE);
+                        NLogConfigFile = GetFIXDictionaryString(dict, NLOG_CONFIGFILE);
                         if (!string.IsNullOrEmpty(NLogConfigFile))
                         {
                             if (File.Exists(NLogConfigFile))
@@ -80,8 +69,8 @@ namespace Fabkom.FIX.RollingLogs
                                 ThrowExceptions = true,
                                 ThrowConfigExceptions = true,
                                 LogToConsole = GetFIXDictionaryBool(dict, NLOG_DEBUG_USECONSOLE),
-                                LogFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "nlog-internal.log"),
-                                LogLevel = NLogXMLConfig.INTERNALLOGLEVEL_DEBUG,
+                                LogFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), NLogConfig.NLOG_INTERNAL_LOG),
+                                LogLevel = NLogXMLConfig.INTERNALLOGLEVEL_TRACE,
                             };
 
                         LinkedList<Dictionary> sessions = settings.Get("SESSION");
@@ -90,10 +79,10 @@ namespace Fabkom.FIX.RollingLogs
                             session.Merge(dict);
                             
                             var fileLogPath = GetFIXDictionaryString(session, SessionSettings.FILE_LOG_PATH);
-                            var nLogMeggagesMaxFileSize = GetFIXDictionaryInt(session, NLOG_MAXFILESIZE_MESSAGES, 30);
-                            var nLogMessagesNumFilesToKeep = GetFIXDictionaryInt(session, NLOG_NUMFILESTOKEEP_MESSAGES, 10);
-                            var nLogEventsMaxFileSize = GetFIXDictionaryInt(session, NLOG_MAXFILESIZE_EVENTS, 10);
-                            var nLogEventsNumFilesToKeep = GetFIXDictionaryInt(session, NLOG_NUMFILESTOKEEP_EVENTS, 5);
+                            var nLogMeggagesMaxFileSize = GetFIXDictionaryInt(session, NLOG_MAXFILESIZE_MESSAGES, NLOG_MAXFILESIZE_MESSAGES_DEFAULT);
+                            var nLogMessagesNumFilesToKeep = GetFIXDictionaryInt(session, NLOG_NUMFILESTOKEEP_MESSAGES, NLOG_NUMFILESTOKEEP_MESSAGES_DEFAULT);
+                            var nLogEventsMaxFileSize = GetFIXDictionaryInt(session, NLOG_MAXFILESIZE_EVENTS, NLOG_MAXFILESIZE_EVENTS_DEFAULT);
+                            var nLogEventsNumFilesToKeep = GetFIXDictionaryInt(session, NLOG_NUMFILESTOKEEP_EVENTS, NLOG_NUMFILESTOKEEP_EVENTS_DEFAULT);
 
                             SessionID sessionID = GetSessionID(session);
                             sessionsNLog.Add(new SessionNLogConfig(sessionID.Normalize(), fileLogPath, nLogMeggagesMaxFileSize, nLogMessagesNumFilesToKeep, nLogEventsMaxFileSize, nLogEventsNumFilesToKeep));

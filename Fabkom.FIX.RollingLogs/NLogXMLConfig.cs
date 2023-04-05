@@ -5,24 +5,6 @@ using System.Text;
 
 namespace Fabkom.FIX.RollingLogs
 {
-    public class NLogInternalLoggerConfig
-    {
-        public readonly bool UseInternalLogger = false;
-        public bool AutoReload { get; set; }
-        public bool ThrowExceptions { get; set; }
-        public bool ThrowConfigExceptions { get; set; }
-        public bool LogToConsole { get; set; }
-        public string LogFile { get; set; }
-        public string LogLevel { get; set; }
-        public NLogInternalLoggerConfig(bool _useInternalLogger)
-        {
-            UseInternalLogger = _useInternalLogger;
-            AutoReload = false;
-            ThrowExceptions = false;
-            ThrowConfigExceptions = false;
-        }
-    }
-
     public static class NLogXMLConfig
     {
         public const string XMLTRUE = "true";
@@ -118,7 +100,6 @@ namespace Fabkom.FIX.RollingLogs
 
             return sb.ToString();
         }
-
         private static string FormatInternalLoggerConfig(NLogInternalLoggerConfig nLogInternalLoggerConfig)
         {
             StringBuilder sb = new StringBuilder();
@@ -144,7 +125,7 @@ namespace Fabkom.FIX.RollingLogs
                 if (false == string.IsNullOrEmpty(nLogInternalLoggerConfig?.LogFile))
                     sb.AppendLine($"  {INTERNALLOGFILE}=\"{nLogInternalLoggerConfig.LogFile}\"");
                 else
-                    sb.AppendLine($"  {INTERNALLOGFILE}=\"{"${basedir}/App_Data/nlog-internal.log"}\"");
+                    sb.AppendLine($"  {INTERNALLOGFILE}=\"{"${basedir}/App_Data/"}{NLogConfig.NLOG_INTERNAL_LOG}\"");
             }
             return sb.ToString().Trim(new char[] { '\r', '\n' });
         }
