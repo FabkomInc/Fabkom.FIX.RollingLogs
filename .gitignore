@@ -363,7 +363,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-#FIX Crap
+# FIX Crap
 [Ss]tore/
 {Ll]og/
 LogsBackup/
